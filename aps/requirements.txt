@@ -1,0 +1,10 @@
+astor==0.8.1
+coverage==7.13.5
+graphviz==0.21
+iniconfig==2.3.0
+packaging==26.0
+pluggy==1.6.0
+Pygments==2.19.2
+pytest==9.0.2
+pytest-cov==7.1.0
+staticfg==0.9.5
