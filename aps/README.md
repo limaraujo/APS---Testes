@@ -1,11 +1,8 @@
 # APS - Testes
 
-Documentação focada exclusivamente na execução e manutenção dos testes automatizados.
-
-## Estrutura esperada
+Documentação focada exclusivamente na execução dos testes automatizados.
 
 ```text
-. (venv)
 └── aps
 	├── pytest.ini
 	├── requirements.txt
@@ -114,3 +111,6 @@ A suíte em [tests/test_main.py](tests/test_main.py) cobre:
 - validação de entradas inválidas com ValueError
 - limites importantes das regras (16, 18, 6.0, 7.0, 75.0 e 80.0)
 - prioridade de rejeição sobre revisão manual
+- pairwise testing
+
+  <img width="409" height="87" alt="image" src="https://github.com/user-attachments/assets/6c4c200e-b3f9-493b-af0a-151261b3716c" />
