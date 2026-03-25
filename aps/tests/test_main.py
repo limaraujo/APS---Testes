@@ -110,3 +110,57 @@ def test_rejected_attendance_only():
     result = evaluate_scholarship(18, 8.0, 70.0, True, False)
     assert result.status == Status.REJECTED
     assert "Attendance rate is below the minimum required." in result.reasons
+    
+# Cada teste cobre combinações importantes de pares (pairwise)
+
+@pytest.mark.parametrize(
+    "age, gpa, attendance, courses, disciplinary, expected_status",
+    [
+        # Age x GPA
+        (15, 5.5, 80.0, True, False, Status.REJECTED),       # REJECTED por idade e GPA
+        (16, 7.5, 80.0, True, False, Status.MANUAL_REVIEW), # Age revisão, GPA aprovado
+        (18, 6.5, 80.0, True, False, Status.MANUAL_REVIEW), # Age aprovado, GPA revisão
+
+        # Age x Attendance
+        (16, 8.0, 76.0, True, False, Status.MANUAL_REVIEW), # Age revisão, Attendance revisão
+        (18, 8.0, 78.0, True, False, Status.MANUAL_REVIEW), # Age aprovado, Attendance revisão
+        (15, 8.0, 70.0, True, False, Status.REJECTED),      # Age rejeição, Attendance rejeição
+
+        # Age x Courses
+        (18, 8.5, 85.0, False, False, Status.REJECTED),     # Age aprovado, courses rejeição
+        (16, 7.0, 85.0, False, False, Status.REJECTED),     # Age revisão, courses rejeição
+
+        # Age x Disciplinary
+        (18, 8.5, 85.0, True, True, Status.REJECTED),       # Age aprovado, disciplinary rejeição
+        (16, 7.0, 85.0, True, True, Status.REJECTED),       # Age revisão, disciplinary rejeição
+
+        # GPA x Attendance
+        (18, 6.5, 76.0, True, False, Status.MANUAL_REVIEW), # GPA revisão, Attendance revisão
+        (18, 5.5, 78.0, True, False, Status.REJECTED),      # GPA rejeição, Attendance revisão
+
+        # GPA x Courses
+        (18, 6.5, 85.0, False, False, Status.REJECTED),     # GPA revisão, Courses rejeição
+        (18, 5.5, 85.0, False, False, Status.REJECTED),     # GPA rejeição, Courses rejeição
+
+        # GPA x Disciplinary
+        (18, 6.5, 85.0, True, True, Status.REJECTED),       # GPA revisão, disciplinary rejeição
+        (18, 5.5, 85.0, True, True, Status.REJECTED),       # GPA rejeição, disciplinary rejeição
+
+        # Attendance x Courses
+        (18, 8.0, 76.0, False, False, Status.REJECTED),     # Attendance revisão, Courses rejeição
+        (18, 8.0, 78.0, False, False, Status.REJECTED),     # Attendance revisão, Courses rejeição
+
+        # Attendance x Disciplinary
+        (18, 8.0, 76.0, True, True, Status.REJECTED),       # Attendance revisão, Disciplinary rejeição
+        (18, 8.0, 78.0, True, True, Status.REJECTED),       # Attendance revisão, Disciplinary rejeição
+
+        # Courses x Disciplinary
+        (18, 8.5, 85.0, False, True, Status.REJECTED),      # Courses rejeição, Disciplinary rejeição
+
+        # Caso aprovado completo
+        (18, 8.5, 85.0, True, False, Status.APPROVED),      # Todos aprovados
+    ]
+)
+def test_evaluate_scholarship_pairwise(age, gpa, attendance, courses, disciplinary, expected_status):
+    result = evaluate_scholarship(age, gpa, attendance, courses, disciplinary)
+    assert result.status == expected_status
